@@ -1,0 +1,15 @@
+[server]
+  name = "ssr-sub-hub"
+  addr = ":1314" # 自定义端口
+[server.logger]
+  level = "debug" # 设置输出日志过滤等级
+
+# 以下的配置可以热更新，更改后不需要重启
+
+[user.jabingp]                          # 配置用户名，不区分大小写（viper框架决定的）
+  key = "JabinGP"                       # 配置用户的密钥，区分大小写
+  ssr = ["http://localhost:8082/1.txt"] # 配置用户的订阅列表
+
+[user.sora]
+  key = "sora"
+  ssr = ["http://localhost:8082/2.txt","http://localhost:8082/3.txt"]
