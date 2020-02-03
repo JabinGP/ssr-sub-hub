@@ -28,8 +28,22 @@ func GetSSR(ctx iris.Context) {
 		return
 	}
 
-	linkList := userService.GetSSRLinkList(req.Username)
+	ssrList, err := userService.GetSSRList(req.Username)
+	if err != nil {
+		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.JSON(model.ErrorReadUserConfig(err))
+		return
+	}
+	log.Println(ssrList)
+
+	var linkList []string
+	for _, ssr := range ssrList {
+		if ssr.Enable {
+			linkList = append(linkList, ssr.URL)
+		}
+	}
 	log.Println(linkList)
+
 	data, err := subService.GetAllSSR(linkList)
 	if err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
@@ -60,7 +74,12 @@ func GetSSRList(ctx iris.Context) {
 		return
 	}
 
-	linkList := userService.GetSSRLinkList(req.Username)
+	ssrList, err := userService.GetSSRList(req.Username)
+	if err != nil {
+		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.JSON(model.ErrorReadUserConfig(err))
+		return
+	}
 
-	ctx.JSON(linkList)
+	ctx.JSON(ssrList)
 }

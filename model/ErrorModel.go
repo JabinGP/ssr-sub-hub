@@ -52,6 +52,11 @@ func ErrorGenerateFile(err error) ErrorModel {
 	return buildError(9, "合成文件失败", err.Error())
 }
 
+// ErrorReadUserConfig 10-读取用户配置文件失败
+func ErrorReadUserConfig(err error) ErrorModel {
+	return buildError(10, "读取个人配置文件失败", err.Error())
+}
+
 func buildError(code int64, msg string, detail string) ErrorModel {
 	return ErrorModel{
 		Code:   code,

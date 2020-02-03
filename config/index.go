@@ -33,3 +33,22 @@ func FlashConfig() {
 		panic(err)
 	}
 }
+
+// GetUserConfig ..
+func GetUserConfig(username string) (*viper.Viper, error) {
+	userViper := viper.New()
+	// scan the file named config in the root directory
+	userViper.AddConfigPath("./user")
+
+	userViper.SetConfigName(username)
+
+	// read config, if failed, configure by default
+	if err := userViper.ReadInConfig(); err == nil {
+		log.Println("Read user config successfully: ", userViper.ConfigFileUsed())
+	} else {
+		log.Printf("Read user config failed: %s \n", err)
+		return nil, err
+	}
+
+	return userViper, nil
+}

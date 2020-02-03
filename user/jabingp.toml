@@ -1,0 +1,8 @@
+[[ssr]]
+  name = "jabingp的第一个订阅链接"    # 订阅的信息，便于自己知道是哪个
+  url = "http://localhost:8082/1.txt" # 订阅链接
+  enable = false                      # false不启用/true启用
+[[ssr]]
+  name = "jabingp的第二个订阅链接"
+  url = "http://localhost:8082/2.txt"
+  enable = true
