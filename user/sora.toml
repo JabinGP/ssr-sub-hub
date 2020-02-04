@@ -5,4 +5,4 @@
 [[ssr]]
   name = "sora的第二个订阅链接"
   url = "http://localhost:8082/2.txt"
-  enable = true
+  enable = false

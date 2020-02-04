@@ -57,6 +57,16 @@ func ErrorReadUserConfig(err error) ErrorModel {
 	return buildError(10, "读取个人配置文件失败", err.Error())
 }
 
+// ErrorBadUserConfig 11-上传的配置文件过短
+func ErrorBadUserConfig(err error) ErrorModel {
+	return buildError(11, "上传的配置文件错误", err.Error())
+}
+
+// ErrorUpdateUserConfig 12-更新用户配置文件错误
+func ErrorUpdateUserConfig(err error) ErrorModel {
+	return buildError(12, "更新用户配置文件错误", err.Error())
+}
+
 func buildError(code int64, msg string, detail string) ErrorModel {
 	return ErrorModel{
 		Code:   code,

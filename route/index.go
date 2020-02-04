@@ -10,4 +10,9 @@ func Route(app *iris.Application) {
 	{
 		routeSSR(ssr)
 	}
+	user := app.Party("/user")
+	{
+		routeUser(user)
+	}
+	routeStatic(app)
 }

@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"io/ioutil"
 
 	"github.com/JabinGP/ssr-sub-hub/config"
 	"github.com/JabinGP/ssr-sub-hub/model/pojo"
@@ -45,4 +46,14 @@ func (userService *UserService) GetSSRList(username string) ([]pojo.SSR, error) 
 	}
 	userConfig.UnmarshalKey("ssr", &ssrList)
 	return ssrList, nil
+}
+
+// UpdateUserConfig ...
+func (userService *UserService) UpdateUserConfig(username string, userConfig string) error {
+	configByteList := []byte(userConfig)
+	err := ioutil.WriteFile("./user/"+username+".toml",configByteList,0666)
+	if err != nil {
+		return err
+	}
+	return nil
 }

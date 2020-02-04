@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ssr-sub-hub</title>
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+  <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
+    integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+  <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+  <style>
+    .CodeMirror {
+      border-top: 1px solid black;
+      border-bottom: 1px solid black;
+      /* overflow: auto; */
+    }
+  </style>
+  <link href="https://cdn.bootcss.com/codemirror/5.48.4/codemirror.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/codemirror/5.48.4/codemirror.min.js"></script>
+  <script src="https://cdn.bootcss.com/codemirror/5.48.4/mode/toml/toml.min.js"></script>
+</head>
+
+<body>
+  <h4>备忘提示：</h4>
+  <h5> 1. 订阅地址格式是（{xxx}换成实际的字符） => http://{域名}:{端口号}/ssr?username={用户名}&password={密码}</h5>
+  <h4>使用说明：</h4>
+  <h5> 1. 输入用户名和密码，勾选记住（如果你不想每次都输入的话）</h5>
+  <h5> 2. 点击拉取个人配置，代码框将出现自己的配置</h5>
+  <h5> 3. 修改后点击更新个人配置（确保此时框内的用户名和密码是正确的）</h5>
+  <span>用户名</span>
+  <input type="text" id="username" />
+  <span>密码</span>
+  <input type="password" id="password" />
+  <input type="checkbox" id="savePassword">记住</input>
+  <button type="button" class="btn btn-default" onclick="GetUserConfig()">拉取个人配置</button>
+  <textarea id="code"></textarea>
+  <button type="button" class="btn btn-default" onclick="PostUserConfig()">更新个人配置</button>
+
+  <script>
+    let editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+      mode: "text/x-toml", //实现Toml代码高亮
+      lineNumbers: true
+    });
+    ReadSaved()
+    function ReadSaved() {
+      let username = localStorage.getItem("username");
+      let password = localStorage.getItem("password");
+      if (username != null && password != null) {
+        $("#username").val(username)
+        $("#password").val(password)
+      }
+    }
+    function GetUserConfig() {
+      let username = $("#username").val()
+      let password = $("#password").val()
+      let savePassword = $("#savePassword")["0"].checked
+      if (savePassword) {
+        SaveUsernamePassword(username, password)
+      }
+      $.ajax({
+        url: `/user/config?username=${username}&password=${password}`,
+        success: (data) => {
+          editor.setValue(data.ConfigString)
+        },
+        error: (err) => {
+          editor.setValue(err.responseText)
+        }
+      })
+    }
+    function PostUserConfig() {
+      let username = $("#username").val()
+      let password = $("#password").val()
+      let config = editor.getValue()
+      if (config.length < 5) {
+        alert("配置文件长度过短，请检查后重试")
+        return
+      }
+
+      $.ajax({
+        type: "POST",
+        url: `/user/config`,
+        data: JSON.stringify({
+          username,
+          password,
+          config
+        }),
+        dataType: "json",
+        success: (data) => {
+          alert("更新成功")
+        },
+        error: (err) => {
+          alert("更新失败" + err.responseText)
+        }
+      })
+    }
+    function SaveUsernamePassword(username, password) {
+      localStorage.setItem("username", username);
+      localStorage.setItem("password", password);
+    }
+
+  </script>
+</body>
+
+</html>
