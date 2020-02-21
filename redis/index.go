@@ -17,6 +17,9 @@ func init() {
 			return
 		}
 		Client = newRedisClient()
+		if Client == nil {
+			panic("Rdis")
+		}
 	})
 }
 
@@ -31,16 +34,16 @@ func newRedisClient() *redis.Client {
 		Password: config.Viper.GetString("redis.password"),
 		DB:       config.Viper.GetInt("redis.db"),
 	})
-	if !pingClient(client) {
-		return nil
+	if err := pingClient(client); err != nil {
+		panic(err)
 	}
 	return client
 }
 
-func pingClient(client *redis.Client) bool {
+func pingClient(client *redis.Client) error {
 	_, err := client.Ping().Result()
 	if err != nil {
-		return false
+		return err
 	}
-	return true
+	return nil
 }
