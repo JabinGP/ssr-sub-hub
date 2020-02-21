@@ -2,10 +2,18 @@ package service
 
 import (
 	"bytes"
+	"crypto/md5"
 	"encoding/base64"
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
+
+	"github.com/JabinGP/ssr-sub-hub/config"
+	"github.com/JabinGP/ssr-sub-hub/redis"
+	"github.com/JabinGP/ssr-sub-hub/tool"
 )
 
 // SubService sub service
@@ -16,6 +24,22 @@ type SubService struct {
 func (subService *SubService) GetAllSSR(linkList []string) ([]byte, error) {
 	var dataList [][]byte
 	var encodedDataList [][]byte
+	var md5String = ""
+	jsonBts := tool.GetJSONBts(linkList)
+	if jsonBts == nil {
+		return nil, errors.New("获取列表md5失败：转换json时出错")
+	}
+	md5String = fmt.Sprintf("%x", md5.Sum(jsonBts))
+
+	if redis.Enable {
+		log.Printf("Redis enabled, trying to get the value of key %s \n", md5String)
+		res, err := redis.Client.Get(md5String).Result()
+		if err == nil {
+			log.Printf("Redis enabled, successfully got the value of key %s \n", md5String)
+			return []byte(res), nil
+		}
+		log.Printf("Redis enabled, fail to get the value of key %s \n", md5String)
+	}
 
 	for _, url := range linkList {
 		// 请求数据
@@ -57,5 +81,14 @@ func (subService *SubService) GetAllSSR(linkList []string) ([]byte, error) {
 	decodedData := make([]byte, n)
 	base64.StdEncoding.Encode(decodedData, allData)
 
+	if redis.Enable {
+		log.Printf("Redis enabled, trying to save the value of key %s \n", md5String)
+		expiration := time.Duration(config.Viper.GetInt("redis.expiration"))
+		set, err := redis.Client.SetNX(md5String, string(decodedData), expiration*time.Second).Result()
+		if err != nil || set != true {
+			log.Println(err)
+		}
+		log.Printf("Redis enabled, successfully saved the value of key %s \n", md5String)
+	}
 	return decodedData, nil
 }
