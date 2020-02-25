@@ -58,18 +58,14 @@ func (subService *SubService) GetAllSSR(linkList []string) ([]byte, error) {
 		// 暂存数据
 		dataList = append(dataList, data)
 	}
-
 	// 解密
 	for index, data := range dataList {
 		log.Printf("decoding No.%d", index+1)
-
-		n := base64.RawStdEncoding.DecodedLen(len(data)) //DecodedLen返回len(encoded)字节base64编码的数据解码后的最大长度
-		encodedData := make([]byte, n)
-		_, err := base64.RawStdEncoding.Decode(encodedData, data)
+		encodedData, err := tool.DecodeBase64(data)
 		if err != nil {
+			log.Println(err)
 			return nil, err
 		}
-
 		encodedDataList = append(encodedDataList, encodedData)
 	}
 
