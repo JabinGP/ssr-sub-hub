@@ -10,6 +10,10 @@ func Route(app *iris.Application) {
 	{
 		routeSSR(ssr)
 	}
+	v2ray := app.Party("/v2ray")
+	{
+		routeV2ray(v2ray)
+	}
 	user := app.Party("/user")
 	{
 		routeUser(user)

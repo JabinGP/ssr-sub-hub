@@ -1,8 +1,20 @@
 [[ssr]]
   name = "jabingp的第一个订阅链接"    # 订阅的信息，便于自己知道是哪个
+  official = "http://localhost"  # 官网链接，便于自己点击
   url = "http://localhost:8082/1.txt" # 订阅链接
   enable = false                      # false不启用/true启用
 [[ssr]]
   name = "jabingp的第二个订阅链接"
+  official = "http://localhost"
   url = "http://localhost:8082/2.txt"
+  enable = false
+[[v2ray]]
+  name = "jabingp的第一个v2ray"
+  official = "http://localhost"
+  url = "http://localhost:8082/3.txt"
+  enable = false
+[[v2ray]]
+  name = "jabingp的第二个v2ray"
+  official = "http://localhost"
+  url = "http://localhost:8082/4.txt"
   enable = false

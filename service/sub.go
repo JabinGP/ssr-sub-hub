@@ -88,3 +88,8 @@ func (subService *SubService) GetAllSSR(linkList []string) ([]byte, error) {
 	}
 	return decodedData, nil
 }
+
+// GetAllV2ray ...
+func (subService *SubService) GetAllV2ray(linkList []string) ([]byte, error) {
+	return subService.GetAllSSR(linkList)
+}

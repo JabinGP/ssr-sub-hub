@@ -48,6 +48,19 @@ func (userService *UserService) GetSSRList(username string) ([]pojo.SSR, error) 
 	return ssrList, nil
 }
 
+// GetV2rayList Get User V2ray List
+func (userService *UserService) GetV2rayList(username string) ([]pojo.V2ray, error) {
+	v2rayList := []pojo.V2ray{}
+
+	userConfig, err := config.GetUserConfig(username)
+	if err != nil {
+		return nil, err
+	}
+	userConfig.UnmarshalKey("v2ray", &v2rayList)
+	return v2rayList, nil
+}
+
+
 // UpdateUserConfig ...
 func (userService *UserService) UpdateUserConfig(username string, userConfig string) error {
 	configByteList := []byte(userConfig)
