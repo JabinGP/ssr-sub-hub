@@ -6,6 +6,6 @@ import (
 )
 
 func routeUser(party router.Party) {
-	party.Get("/config", controller.GetUserConfig)
+	party.Get("/config/{username:string}/{password:string}", controller.GetUserConfig)
 	party.Post("/config", controller.PostUserConfig)
 }

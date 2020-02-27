@@ -5,15 +5,19 @@ import (
 	"log"
 
 	"github.com/JabinGP/ssr-sub-hub/model"
-	"github.com/JabinGP/ssr-sub-hub/model/reqo"
 
 	"github.com/kataras/iris/v12"
 )
 
 // GetSSR 获取SSR订阅文件
 func GetSSR(ctx iris.Context) {
-	req := reqo.GetSub{}
-	ctx.ReadQuery(&req)
+	var req struct {
+		Username string
+		Password string
+	}
+
+	req.Username = ctx.Params().Get("username")
+	req.Password = ctx.Params().Get("password")
 
 	if req.Username == "" || req.Password == "" {
 		ctx.StatusCode(iris.StatusBadRequest)
@@ -58,8 +62,13 @@ func GetSSR(ctx iris.Context) {
 
 // GetSSRList 获取SSR订阅链接列表
 func GetSSRList(ctx iris.Context) {
-	req := reqo.GetSub{}
-	ctx.ReadQuery(&req)
+	var req struct {
+		Username string
+		Password string
+	}
+
+	req.Username = ctx.Params().Get("username")
+	req.Password = ctx.Params().Get("password")
 
 	if req.Username == "" || req.Password == "" {
 		ctx.StatusCode(iris.StatusBadRequest)

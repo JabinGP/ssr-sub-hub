@@ -15,7 +15,9 @@ func GetV2ray(ctx iris.Context) {
 		Username string
 		Password string
 	}
-	ctx.ReadQuery(&req)
+
+	req.Username = ctx.Params().Get("username")
+	req.Password = ctx.Params().Get("password")
 
 	if req.Username == "" || req.Password == "" {
 		ctx.StatusCode(iris.StatusBadRequest)
@@ -64,7 +66,9 @@ func GetV2rayList(ctx iris.Context) {
 		Username string
 		Password string
 	}
-	ctx.ReadQuery(&req)
+
+	req.Username = ctx.Params().Get("username")
+	req.Password = ctx.Params().Get("password")
 
 	if req.Username == "" || req.Password == "" {
 		ctx.StatusCode(iris.StatusBadRequest)

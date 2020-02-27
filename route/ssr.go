@@ -6,6 +6,6 @@ import (
 )
 
 func routeSSR(party router.Party) {
-	party.Get("/", controller.GetSSR)
-	party.Get("/list", controller.GetSSRList)
+	party.Get("/{username:string}/{password:string}", controller.GetSSR)
+	party.Get("/list/{username:string}/{password:string}", controller.GetSSRList)
 }

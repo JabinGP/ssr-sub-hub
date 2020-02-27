@@ -7,17 +7,23 @@ import (
 	"time"
 
 	"github.com/JabinGP/ssr-sub-hub/model"
-	"github.com/JabinGP/ssr-sub-hub/model/reqo"
-	"github.com/JabinGP/ssr-sub-hub/model/reso"
 
 	"github.com/kataras/iris/v12"
 )
 
 // GetUserConfig 获取配置
 func GetUserConfig(ctx iris.Context) {
-	req := reqo.GetSub{}
-	ctx.ReadQuery(&req)
-	res := reso.GetUserConfig{}
+	var req struct {
+		Username string
+		Password string
+	}
+	var res struct {
+		ConfigString string
+	}
+
+	req.Username = ctx.Params().Get("username")
+	req.Password = ctx.Params().Get("password")
+
 	if req.Username == "" || req.Password == "" {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(model.ErrorIncompleteData(errors.New("用户名密码不能为空")))
@@ -54,7 +60,11 @@ func GetUserConfig(ctx iris.Context) {
 
 // PostUserConfig ...
 func PostUserConfig(ctx iris.Context) {
-	req := reqo.PostUserConfig{}
+	var req struct {
+		Username string
+		Password string
+		Config   string
+	}
 	ctx.ReadJSON(&req)
 
 	if req.Username == "" || req.Password == "" {

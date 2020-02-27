@@ -6,6 +6,6 @@ import (
 )
 
 func routeV2ray(party router.Party) {
-	party.Get("/", controller.GetV2ray)
-	party.Get("/list", controller.GetV2rayList)
+	party.Get("/{username:string}/{password:string}", controller.GetV2ray)
+	party.Get("/list/{username:string}/{password:string}", controller.GetV2rayList)
 }
